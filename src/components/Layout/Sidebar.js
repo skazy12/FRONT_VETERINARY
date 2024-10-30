@@ -52,7 +52,7 @@ const Sidebar = () => {
       <div className="p-6">
         <Link to="/dashboard" className="flex items-center space-x-2">
           <img src="/logo.png" alt="PurplePaw" className="h-8 w-auto" />
-          <span className="text-xl font-bold text-gray-900">PurplePaw</span>
+          <span className="text-xl font-bold text-gray-900">🐾PurplePaw</span>
         </Link>
       </div>
 

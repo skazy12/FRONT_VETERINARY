@@ -12,6 +12,7 @@ import UserManagement from '../components/UserManagement';
 import MainLayout from '../components/Layout/MainLayout';
 import PetMedicalHistory from '../components/PetMedicalHistory';
 import { useAuth } from '../context/AuthContext';
+import MyPets from '../components/MyPets';
 
 // Componente para rutas protegidas
 const PrivateRoute = ({ children, allowedRoles = [] }) => {
@@ -69,7 +70,10 @@ const AppRoutes = () => {
             <MyProfile />
           </PrivateRoute>
         } />
-        
+        <Route path="/my-pets" element={
+          <PrivateRoute>
+            <MyPets />
+          </PrivateRoute>} />
         {/* Ruta por defecto */}
         <Route path="/" element={
           <Navigate to="/dashboard" replace />
@@ -93,7 +97,7 @@ const AppRoutes = () => {
         <Route
           path="/pets/:petId/history"
           element={
-            <PrivateRoute allowedRoles={['VETERINARIO', 'RECEPCIONISTA']}>
+            <PrivateRoute >
               <PetMedicalHistory />
             </PrivateRoute>
           }
