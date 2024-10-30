@@ -1,12 +1,15 @@
 // ClientList.js
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Table from '../common/Table/Table';
 import clientService from '../../services/clientService';
 import petService from '../../services/petService';
 import toast from 'react-hot-toast';
 import Modal from '../common/Modal/Modal';
 import ScheduleAppointment from '../ScheduleAppointment';
+import AddMedicalRecord from '../AddMedicalRecord';
 import { Search, X, Calendar, Clock, PlusCircle } from 'lucide-react'; 
+
 
 // Componente SearchBox separado
 const SearchBox = ({ searchTerm, onSearchChange, onClear }) => (
@@ -43,6 +46,9 @@ const ClientList = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [error, setError] = useState('');
   const searchTimeoutRef = useRef(null);
+  const [isAddingMedicalRecord, setIsAddingMedicalRecord] = useState(false);
+  const [selectedPetForRecord, setSelectedPetForRecord] = useState(null);
+  const navigate = useNavigate();
 
   // Estados para el modal de agenda
   const [isSchedulingModalOpen, setIsSchedulingModalOpen] = useState(false);
@@ -142,15 +148,30 @@ const ClientList = () => {
     toast.success('Cita agendada exitosamente');
   };
 
-  const handleAddHistory = (petId) => {
-    // Implementar lógica para agregar historial
-    toast.info('Funcionalidad de agregar historial en desarrollo');
+  const handleAddHistory = (pet) => {
+    console.log('Pet seleccionada para agregar historial:', pet); // Log para debugging
+    console.log('Agregando historial para mascota:', pet.name)
+    if (!pet) {
+      toast.error('Error: No se pudo identificar la mascota');
+      return;
+    }
+    setSelectedPetForRecord({
+      id: pet.id,
+      name: pet.name
+    });
+    setIsAddingMedicalRecord(true);
   };
+  
 
-  const handleViewHistory = (petId) => {
-    // Implementar lógica para ver historial
-    toast.info('Funcionalidad de ver historial en desarrollo');
+  const handleViewHistory = (pet) => {
+    if (!pet || !pet.id) {
+      toast.error('Error: No se pudo identificar la mascota');
+      return;
+    }
+    // Navegar a la página de historial
+    navigate(`/pets/${pet.id}/history`);
   };
+  
 
   // Manejadores de búsqueda
   const handleSearchChange = useCallback((value) => {
@@ -292,17 +313,17 @@ const ClientList = () => {
                       </button>
 
                       <button
-                        onClick={() => handleViewHistory(pet.id)}
+                        onClick={() => handleViewHistory(pet)}
                         className="w-full flex items-center justify-center px-4 py-2 
-                                 bg-blue-100 text-blue-700 rounded-md
-                                 hover:bg-blue-200 transition-colors duration-200"
+             bg-blue-100 text-blue-700 rounded-md
+             hover:bg-blue-200 transition-colors duration-200"
                       >
                         <Clock className="w-4 h-4 mr-2" />
                         Ver Historial
                       </button>
 
                       <button
-                        onClick={() => handleAddHistory(pet.id)}
+                        onClick={() => handleAddHistory(pet)}
                         className="w-full flex items-center justify-center px-4 py-2 
              bg-green-100 text-green-700 rounded-md
              hover:bg-green-200 transition-colors duration-200"
@@ -338,6 +359,24 @@ const ClientList = () => {
             clientId={selectedClient.uid}
             onSuccess={handleSchedulingSuccess}
             onCancel={() => setIsSchedulingModalOpen(false)}
+          />
+        </Modal>
+      )}
+      {/* Modal de registro medico */}
+      {isAddingMedicalRecord && selectedPetForRecord && (
+        <Modal
+          isOpen={isAddingMedicalRecord}
+          onClose={() => setIsAddingMedicalRecord(false)}
+        >
+          <AddMedicalRecord
+            petId={selectedPetForRecord.id}
+            petName={selectedPetForRecord.name}
+            onClose={() => setIsAddingMedicalRecord(false)}
+            onSuccess={() => {
+              setIsAddingMedicalRecord(false);
+              // Opcional: Recargar los datos del cliente
+              handleSelectClient(selectedClient);
+            }}
           />
         </Modal>
       )}

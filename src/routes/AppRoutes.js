@@ -10,6 +10,7 @@ import TodayAppointments from '../components/appointments/TodayAppointments'; //
 import InventoryManagement from '../components/InventoryManagement'; // Nueva importación
 import UserManagement from '../components/UserManagement';
 import MainLayout from '../components/Layout/MainLayout';
+import PetMedicalHistory from '../components/PetMedicalHistory';
 import { useAuth } from '../context/AuthContext';
 
 // Componente para rutas protegidas
@@ -89,6 +90,14 @@ const AppRoutes = () => {
             <UserManagement />
           </PrivateRoute>
         } />
+        <Route
+          path="/pets/:petId/history"
+          element={
+            <PrivateRoute allowedRoles={['VETERINARIO', 'RECEPCIONISTA']}>
+              <PetMedicalHistory />
+            </PrivateRoute>
+          }
+        />
 
         {/* Ruta 404 */}
         <Route path="*" element={<Navigate to="/" replace />} />
