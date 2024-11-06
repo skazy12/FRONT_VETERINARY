@@ -15,8 +15,8 @@ pipeline {
                 sh 'npm -v'  // Muestra la versión de npm
             }
         }
-    
-   
+        
+
         stage('Test Git') {
             steps {
                 script {
@@ -24,9 +24,8 @@ pipeline {
                     def gitVersion = sh(script: 'git --version', returnStdout: true).trim()
                     echo "Git Version: ${gitVersion}"
                 }
-            
-
-
+            }
+        }
         stage('Install Dependencies') {
             steps {
                 echo 'Installing dependencies...'
