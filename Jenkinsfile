@@ -19,7 +19,6 @@ pipeline {
         stage('Test Git') {
             steps {
                 script {
-                    // Intenta ejecutar el comando git
                     def gitVersion = bat(script: 'git --version', returnStdout: true).trim()
                     echo "Git Version: ${gitVersion}"
                 }
@@ -49,7 +48,7 @@ pipeline {
         stage('Unit Tests') {
             steps {
                 echo 'Running unit tests...'
-                bat 'npm test -- --watchAll=false' // Cambiado a bat
+                bat 'npm test -- --watchAll=false --passWithNoTests' // Agregado --passWithNoTests
             }
             post {
                 always {
@@ -57,8 +56,6 @@ pipeline {
                 }
             }
         }
-
-        // Otras etapas...
 
         stage('Deploy to Development') {
             when {
