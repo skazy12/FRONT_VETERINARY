@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        nodejs 'NodeJS' // Asegúrate de que este nombre coincida
+        nodejs 'NodeJS' // Asegúrate de que este nombre coincida con tu configuración en Jenkins
     }
 
     stages {
@@ -11,32 +11,32 @@ pipeline {
                 echo 'Preparing environment...'
                 cleanWs()
                 checkout scm
-                sh 'node -v' // Muestra la versión de Node
-                sh 'npm -v'  // Muestra la versión de npm
+                bat 'node -v' // Muestra la versión de Node
+                bat 'npm -v'  // Muestra la versión de npm
             }
         }
-        
 
         stage('Test Git') {
             steps {
                 script {
                     // Intenta ejecutar el comando git
-                    def gitVersion = sh(script: 'git --version', returnStdout: true).trim()
+                    def gitVersion = bat(script: 'git --version', returnStdout: true).trim()
                     echo "Git Version: ${gitVersion}"
                 }
             }
         }
+
         stage('Install Dependencies') {
             steps {
                 echo 'Installing dependencies...'
-                sh 'npm install'
+                bat 'npm install' // Cambiado a bat
             }
         }
 
         stage('Build') {
             steps {
                 echo 'Building application...'
-                sh 'npm run build'
+                bat 'npm run build' // Cambiado a bat
             }
             post {
                 success {
@@ -49,7 +49,7 @@ pipeline {
         stage('Unit Tests') {
             steps {
                 echo 'Running unit tests...'
-                sh 'npm test -- --watchAll=false'
+                bat 'npm test -- --watchAll=false' // Cambiado a bat
             }
             post {
                 always {
