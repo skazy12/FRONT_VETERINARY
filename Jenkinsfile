@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        nodejs 'NodeJS' // Asegúrate de que este nombre coincida con tu configuración en Jenkins
+        nodejs 'NodeJS' // Asegúrate de que este nombre coincida
     }
 
     stages {
@@ -28,14 +28,14 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 echo 'Installing dependencies...'
-                bat 'npm install' // Cambiado a bat
+                bat 'npm install'
             }
         }
 
         stage('Build') {
             steps {
                 echo 'Building application...'
-                bat 'npm run build' // Cambiado a bat
+                bat 'npm run build'
             }
             post {
                 success {
@@ -52,7 +52,7 @@ pipeline {
             }
             post {
                 always {
-                    junit 'test-results/**/*.xml'
+                    junit 'test-results/**/*.xml' // Esto puede ser omitido si no hay pruebas
                 }
             }
         }
